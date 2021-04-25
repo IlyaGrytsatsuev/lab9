@@ -3,66 +3,60 @@
 #include "func.hpp"
 #include <stdlib.h>
 
-void input()
+void input(int *size1, int *size2, int** k, int** k2,int** p1,int** p2)
 {
     int koeff;
     int num;
     int i = 0;
-    int size1 = 0;
-    int size2 = 0;
     int degree;
-
     printf("enter the power:\n");
     scanf("%d", &num);
     if(num == 0){
-        size1 = 1;
+        *size1 = 1;
     }
     if(num > 0)
     {
-        size1 = num + 1 ;
+        *size1 = num + 1 ;
     }
     if(num < 0)
     {
-        size1 = num*-1 + 1 ;
+        *size1 = num*-1 + 1 ;
     }
     degree = num;
-    int* kf = (int*)malloc(size1*sizeof(int));
+    int* kf = (int*)malloc(*size1*sizeof(int));
     if(kf == NULL)
     {
         printf("Error");
         exit(-1);
     }
+    *k = kf;
 
-    int* power = (int*)malloc((size1 - 1)*sizeof(int));
+    int* power = (int*)malloc((*size1 - 1)*sizeof(int));
     if(power == NULL)
     {
         printf("Error");
         exit(-1);
     }
-
+    *p1 = power;
     if(degree == 0)
     {
-        for(i = 0; i<size1; i++)
+        for(i = 0; i<*size1; i++)
         {
             printf("enter the coefficient x^%d:\n", degree);
             scanf("%d", &koeff);
             power[i] = degree;
             kf[i] = koeff;
-            //printf ("power = %d", power [i]);
-            //printf ("kf = %d\n", kf [i]);
         }
     }
 
     if(degree > 0)
     {
-        for(i = 0; i<size1; i++)
+        for(i = 0; i<*size1; i++)
         {
             printf("enter the coefficient x^%d:\n", degree);
             scanf("%d", &koeff);
             power[i] = degree;
             kf[i] = koeff;
-            //printf ("power = %d", power [i]);
-            //printf ("kf = %d\n", kf [i]);
             degree -- ;
         }
         degree++;
@@ -70,14 +64,12 @@ void input()
 
     if(degree < 0)
     {
-        for(i = 0; i<size1; i++)
+        for(i = 0; i<*size1; i++)
         {
             printf("enter the coefficient x^%d:\n", degree);
             scanf("%d", &koeff);
             power[i] = degree;
             kf[i] = koeff;
-            //printf ("power = %d", power [i]);
-            //printf ("kf = %d\n", kf [i]);
             degree ++ ;
         }
     }
@@ -85,172 +77,154 @@ void input()
     scanf("%d", &num);
     if(num == 0)
     {
-        size2 = 1;
+        *size2 = 1;
     }
     if(num > 0)
     {
-        size2 = num + 1 ;
+        *size2 = num + 1 ;
     }
     if(num < 0)
     {
-        size2 = num*-1 + 1 ;
+        *size2 = num*-1 + 1 ;
     }
     degree = num;
-    int* kf2 = (int*)malloc(size2*sizeof(int));
+    int* kf2 = (int*)malloc(*size2*sizeof(int));
     if(kf2 == NULL)
     {
         printf("Error");
         exit(-1);
     }
-    int* power2 = (int*)malloc((size2 - 1)*sizeof(int));
+    *k2 = kf2;
+    int* power2 = (int*)malloc((*size2 - 1)*sizeof(int));
     if(power2 == NULL)
     {
         printf("Error");
         exit(-1);
     }
+    *p2 = power2;
     if(degree == 0)
     {
-        for(i = 0; i<size2; i++)
+        for(i = 0; i<*size2; i++)
         {
             printf("enter the coefficient x^%d:\n", degree);
             scanf("%d", &koeff);
             kf2[i] = koeff ;
             power2[i] = degree;
-            //printf ("power2 = %d", power2 [i]);
-            //printf ("kf2 = %d\n", kf2 [i]);
         }
     }
     if(degree > 0)
     {
-        for(i = 0; i<size2; i++)
+        for(i = 0; i<*size2; i++)
         {
             printf("enter the coefficient x^%d:\n", degree);
             scanf("%d", &koeff);
             kf2[i] = koeff ;
             power2[i] = degree;
-            //printf ("power2 = %d", power2 [i]);
-            //printf ("kf2 = %d\n", kf2 [i]);
             degree -- ;
         }
     degree++;
     }
     if(degree < 0)
     {
-        for(i = 0; i<size2; i++)
+        for(i = 0; i<*size2; i++)
         {
             printf("enter the coefficient x^%d:\n", degree);
             scanf("%d", &koeff);
             kf2[i] = koeff ;
             power2[i] = degree;
-            //printf ("power2 = %d", power2 [i]);
-            //printf ("kf2 = %d\n", kf2 [i]);
             degree ++ ;
         }
     }
-    derivative (size1, size2, kf, power, kf2, power2);
-    free(kf);
-    free(power);
-    free(kf2);
-    free(power2);
 }
 
-void derivative(int size1, int size2, int* kf, int* power, int* kf2, int* power2)
+void derivative(int* size1, int* size2, int* k, int* p1, int* k2, int* p2, int** d1,int** d2)
 {
     int i = 0;
     int der;
-    int* der1 = (int*)malloc(size1*sizeof(int));
+    int* der1 = (int*)malloc(*size1*sizeof(int));
     
     if(der1 == NULL)
     {
         printf("Error");
         exit(-1);
     }
-    if( power[0] == 0)
+    *d1 = der1;
+    if( p1[0] == 0)
     {
-        for (i = 0; i < size1; i++)
+        for (i = 0; i < *size1; i++)
         {
-            der = kf[i]*power[i];
+            der = k[i]*p1[i];
             der1[i] = der;
-            kf[i] = 0;
-            power[i] = 0;
-            //printf(" der1 = %d\n", der1 [i]);
+            k[i] = 0;
+            p1[i] = 0;
         }
     }
-    if( power[0] > 0)
+    if( p1[0] > 0)
     {
-        for (i = 0; i < size1; i++)
+        for (i = 0; i < *size1; i++)
         {
-            der = kf[i]*power[i];
+            der = k[i]*p1[i];
             der1[i] = der;
-            kf[i] = 0;
-            power[i]-=1;
-            //printf(" der1 = %d\n", der1 [i]);
+            k[i] = 0;
+            p1[i]-=1;
         }
     }
-    if( power[0] < 0)
+    if( p1[0] < 0)
     {
-        for (i = 0; i < size1; i++)
+        for (i = 0; i < *size1; i++)
         {
-            der = kf[i]*power[i];
+            der = k[i]*p1[i];
             der1[i] = der;
-            kf[i] = 0;
-            power[i]-=1;
-            //printf(" der1 = %d\n", der1 [i]);
+            k[i] = 0;
+            p1[i]-=1;
         }
     }
-    int* der2 = (int*)malloc(size2*sizeof(int));
+    int* der2 = (int*)malloc(*size2*sizeof(int));
     if(der2 == NULL)
     {
         printf("Error");
         exit(-1);
     }
-    if(power2[0] == 0)
+    *d2 = der2;
+    if(p2[0] == 0)
     {
-        for (i = 0; i < size2; i++)
+        for (i = 0; i < *size2; i++)
         {
-            der = kf2[i]*power2[i];
+            der = k2[i]*p2[i];
             der2[i] = der;
-            kf2[i] = 0;
-            power2[i]=0;
-            //printf(" der2 = %d\n", der2[i]);
+            k2[i] = 0;
+            p2[i]=0;
         }
     }
-    if(power2[0] > 0)
+    if(p2[0] > 0)
     {
-        for (i = 0; i < size2; i++)
+        for (i = 0; i < *size2; i++)
         {
-            der = kf2[i]*power2[i];
+            der = k2[i]*p2[i];
             der2[i] = der;
-            kf2[i] = 0;
-            power2[i]-=1;
-            //printf(" der2 = %d\n", der2[i]);
+            k2[i] = 0;
+            p2[i]-=1;
         }
     }
-    if(power2[0] < 0)
+    if(p2[0] < 0)
     {
-        for (i = 0; i < size2; i++)
+        for (i = 0; i < *size2; i++)
         {
-            der = kf2[i]*power2[i];
+            der = k2[i]*p2[i];
             der2[i] = der;
-            kf2[i] = 0;
-            power2[i]-=1;
-            //printf(" der2 = %d\n", der2[i]);
+            k2[i] = 0;
+            p2[i]-=1;
         }
     }
-    multiply (der1,  der2, power,  power2, size1,  size2);
 }
 
-void multiply (int* der1, int* der2, int* power, int* power2,int size1, int size2)
+void multiply (int* p1, int* p2,int* size1, int* size2, int* d1, int* d2)
 {
     int num = 0;
-    //int pow [6000];
     int count = 0;
-    // int rez [6000];
-    //int der1[6000];
-    //int der2[6000];
     int i = 0;
     int j = 0;
-    int* rez = (int*)malloc(size1*size2*sizeof(int));
+    int* rez = (int*)malloc(*size1**size2*sizeof(int));
     
     if(rez == NULL)
     {
@@ -258,7 +232,7 @@ void multiply (int* der1, int* der2, int* power, int* power2,int size1, int size
         exit(-1);
     }
     
-    int* pow = (int*)malloc(size1*size2*sizeof(int));
+    int* pow = (int*)malloc(*size1**size2*sizeof(int));
     
     if(pow == NULL)
     {
@@ -266,13 +240,13 @@ void multiply (int* der1, int* der2, int* power, int* power2,int size1, int size
         exit(-1);
     }
     printf(" rezult:\n");
-    for ( i = 0; i < size1; i++ )
+    for ( i = 0; i < *size1; i++ )
     {
-        for (j=0;j < size2; j++)
+        for (j=0;j < *size2; j++)
         {
-            num = der1[i]*der2[j];
+            num = d1[i]*d2[j];
             rez[count] = num;
-            pow[count] = power[i]+power2[j];
+            pow[count] = p1[i]+p2[j];
             if(count == 0)
             {
                 if(rez[count] == 0)
@@ -305,7 +279,5 @@ void multiply (int* der1, int* der2, int* power, int* power2,int size1, int size
     printf("\n");
     free(pow);
     free(rez);
-    free(der1);
-    free(der2);
     return;
     }
