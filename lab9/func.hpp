@@ -1,9 +1,8 @@
 
 #ifndef func_hpp
 #define func_hpp
-//void func(int size1, int size2, int* kf, int* power, int* kf2, int* power2);
-void input(int *size, int** k,int** p);
-void derivative(int* size, int* k, int* p,  int** d);
-void multiply (int* p1, int* p2,int* size1, int* size2, int* d1, int* d2, int** r, int** po, int* c);
-void output (int* c, int* r, int* po);
+void input(int *size, float** k, int* p);
+void derivative(int* size, float* k, int* p, float** d);
+void multiply (int* p1,int* size1, float* d1, int* p2, int* size2, float* d2,float** r, int** po);
+void output(float* r, int* po, int* size1, int* size2);
 #endif /* func_hpp */

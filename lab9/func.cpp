@@ -3,9 +3,9 @@
 #include "func.hpp"
 #include <stdlib.h>
 
-void input(int *size, int** k, int** p)
+void input(int *size, float** k, int* p)
 {
-    int koeff;
+    float koeff;
     int num;
     int i = 0;
     int degree;
@@ -23,7 +23,8 @@ void input(int *size, int** k, int** p)
         *size = num*-1 + 1 ;
     }
     degree = num;
-    int* kf = (int*)malloc(*size*sizeof(int));
+    *p = degree;
+    float* kf = (float*)malloc(*size*sizeof(float));
     if(kf == NULL)
     {
         printf("Error");
@@ -31,20 +32,13 @@ void input(int *size, int** k, int** p)
     }
     *k = kf;
 
-    int* power = (int*)malloc((*size - 1)*sizeof(int));
-    if(power == NULL)
-    {
-        printf("Error");
-        exit(-1);
-    }
-    *p = power;
+   
     if(degree == 0)
     {
         for(i = 0; i<*size; i++)
         {
             printf("enter the coefficient x^%d:\n", degree);
-            scanf("%d", &koeff);
-            power[i] = degree;
+            scanf("%f", &koeff);
             kf[i] = koeff;
         }
     }
@@ -54,8 +48,7 @@ void input(int *size, int** k, int** p)
         for(i = 0; i<*size; i++)
         {
             printf("enter the coefficient x^%d:\n", degree);
-            scanf("%d", &koeff);
-            power[i] = degree;
+            scanf("%f", &koeff);
             kf[i] = koeff;
             degree -- ;
         }
@@ -67,19 +60,19 @@ void input(int *size, int** k, int** p)
         for(i = 0; i<*size; i++)
         {
             printf("enter the coefficient x^%d:\n", degree);
-            scanf("%d", &koeff);
-            power[i] = degree;
+            scanf("%f", &koeff);
             kf[i] = koeff;
             degree ++ ;
         }
     }
 }
 
-void derivative(int* size, int* k, int* p, int** d)
+void derivative(int* size, float* k, int* p, float** d)
 {
     int i = 0;
-    int der;
-    int* der1 = (int*)malloc(*size*sizeof(int));
+    float der;
+    float* der1 = (float*)malloc(*size*sizeof(float));
+    int degree = *p;
     
     if(der1 == NULL)
     {
@@ -87,45 +80,44 @@ void derivative(int* size, int* k, int* p, int** d)
         exit(-1);
     }
     *d = der1;
-    if( p[0] == 0)
+    if(*p == 0)
     {
         for (i = 0; i < *size; i++)
         {
-            der = k[i]*p[i];
+            der = k[i]*(float)degree;
             der1[i] = der;
-            k[i] = 0;
-            p[i] = 0;
         }
     }
-    if( p[0] > 0)
+    if(*p > 0)
     {
+        *p = degree - 1;
         for (i = 0; i < *size; i++)
         {
-            der = k[i]*p[i];
+            der = k[i]*(float)degree;
             der1[i] = der;
-            k[i] = 0;
-            p[i]-=1;
+            degree --;
         }
     }
-    if( p[0] < 0)
+    if( *p < 0)
     {
+        *p = degree - 1;
         for (i = 0; i < *size; i++)
         {
-            der = k[i]*p[i];
+            der = k[i]*(float)degree;
             der1[i] = der;
-            k[i] = 0;
-            p[i]-=1;
+            degree ++;
         }
     }
 }
-
-void multiply (int* p1, int* p2,int* size1, int* size2, int* d1, int* d2,int** r, int** po, int* c)
+void multiply (int* p1,int* size1, float* d1, int* p2, int* size2, float* d2,float** r, int** po)
 {
-    int num = 0;
+    float num = 0;
     int count = 0;
+    int deg1 = *p1;
+    int deg2 = *p2;
     int i = 0;
     int j = 0;
-    int* rez = (int*)malloc(*size1**size2*sizeof(int));
+    float* rez = (float*)malloc(*size1**size2*sizeof(float));
     
     if(rez == NULL)
     {
@@ -141,49 +133,65 @@ void multiply (int* p1, int* p2,int* size1, int* size2, int* d1, int* d2,int** r
         exit(-1);
     }
     *po = pow;
+    
     for ( i = 0; i < *size1; i++ )
     {
         for (j=0;j < *size2; j++)
         {
             num = d1[i]*d2[j];
             rez[count] = num;
-            pow[count] = p1[i]+p2[j];
-            count ++;
+            pow[count] = deg1+deg2;
+            if (deg2>0){
+                deg2--;
             }
+            if (deg2<0){
+                deg2++;
+            }
+            count++;
         }
-    *c = count;
+        if (deg1>0)
+        {
+            deg1--;
+        }
+        if (deg1<0)
+        {
+            deg1++;
+        }
+        deg2 = *p2;
+        }
     }
 
-void output(int* c,int* r, int* po )
+
+void output(float* r, int* po, int* size1, int* size2)
 {
     printf("\n");
     printf("Rezult:\n");
-    for (int i = 0; i < *c; i++ )
+    for (int i = 0; i < *size1**size2; i++ )
     {
         if(i == 0)
         {
             if(r[i] == 0)
             {
-                printf("%d", r[i]);
+                printf("%f", r[i]);
             }
             if (r[i] < 0)
             {
-                printf(" %dx^%d", r[i], po[i]);
+                printf(" %fx^%d", r[i], po[i]);
             }
             if (r[i] > 0)
             {
-                printf("%dx^%d", r[i], po[i]);
+                printf("%fx^%d", r[i], po[i]);
             }
         }
         else
         {
             if(r[i] < 0)
             {
-                printf(" %dx^%d", r[i], po[i]);
+                printf(" %fx^%d", r[i], po[i]);
             }
             if (r[i] > 0)
             {
-                printf(" + %dx^%d", r[i], po[i]);
+                printf(" + %fx^%d", r[i], po[i]);
             }
         }
     }
